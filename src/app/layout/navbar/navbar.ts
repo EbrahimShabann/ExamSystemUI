@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { Auth } from '../../services/auth';
 import { CommonModule } from '@angular/common';
@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
 })
 export class Navbar implements OnInit{
   isLogged:boolean=false;
-  constructor(private router:Router,private auth:Auth){}
+  constructor(private router:Router,private auth:Auth,private cdr: ChangeDetectorRef){}
 
   ngOnInit(): void {
     this.updateLoginStatus();
@@ -25,6 +25,7 @@ export class Navbar implements OnInit{
     this.auth.logout();
     this.updateLoginStatus();
     this.router.navigate(['/account/login']);
+    this.cdr.detectChanges();
   }
 
 }

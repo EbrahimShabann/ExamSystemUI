@@ -29,7 +29,7 @@ export class LoginComponent {
       next: (result) => {
         this.message = 'Login successful!';
         console.log(result);
-        localStorage.setItem('token',result.token);  
+        // localStorage.setItem('token',result.token);  
         this.loading = false;
         this.loginForm.reset();
       },

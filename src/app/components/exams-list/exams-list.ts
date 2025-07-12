@@ -53,7 +53,9 @@ export class ExamsList implements OnInit, OnDestroy {
               this.ExamService.DeleteExam(id).subscribe({
                 next:(res)=>{
                   console.log(res);
-                    this.ExamService.notifyExamsChanged(); // Notify list to update
+                  this.Exams= this.Exams.filter(exam=>exam.id!=id);
+                  this.cdr.detectChanges();
+                    // this.ExamService.notifyExamsChanged(); // Notify list to update
          
                 },
                 error:(error)=>console.log(error)
