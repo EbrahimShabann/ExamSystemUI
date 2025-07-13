@@ -1,5 +1,3 @@
-
-
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
@@ -14,14 +12,12 @@ export class Auth {
 
   constructor(private http: HttpClient,private router:Router) {}
 
-  getheaders():string|null{
-    //get token from cookie then create header ro send to api with request for authorization
+  getheaders(): HttpHeaders | undefined {
     const token = document.cookie.match(new RegExp('(^| )token=([^;]+)'));
-    console.log(token);
-    if(token){
-    this.headers = new HttpHeaders().set("Authorization", `Bearer ${token[2]}`);
+    if (token) {
+      return new HttpHeaders().set('Authorization', `Bearer ${token[2]}`);
     }
-    return this.headers?this.headers:null;
+    return undefined;
   }
 
   

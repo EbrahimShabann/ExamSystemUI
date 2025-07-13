@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { ExamService } from '../../services/exam-service';
@@ -23,7 +23,8 @@ export class TakeExamComponent implements OnInit {
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private examService: ExamService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {
     this.form = this.fb.group({
       answers: this.fb.array([])
@@ -34,11 +35,21 @@ export class TakeExamComponent implements OnInit {
     this.examId = this.route.snapshot.paramMap.get('id') || '';
     this.examService.getExamQuestions(this.examId).subscribe({
       next: (questions) => {
-        this.questions = questions;
+        // Map backend fields to frontend expected fields
+        this.questions = questions.map((q: any) => ({
+          id: q.id,
+          text: q.questionText,
+          type: q.questionType === 0 ? 'MCQ' : 'Text', // adjust if needed
+          choices: q.choices?.map((c: any) => ({
+            id: c.id,
+            text: c.choiceText
+          })) || []
+        }));
         this.initForm();
         this.loading = false;
+        this.cdr.detectChanges();
       },
-      error: () => { this.loading = false; }
+      error: () => { this.loading = false; this.cdr.detectChanges(); }
     });
   }
 
@@ -61,11 +72,13 @@ export class TakeExamComponent implements OnInit {
     this.examService.submitExam(this.examId, payload).subscribe({
       next: () => {
         alert('Exam submitted successfully!');
-        this.router.navigate(['/results']);
+        this.router.navigate(['/']); // Redirect to student dashboard
+        this.cdr.detectChanges();
       },
       error: () => {
         this.submitting = false;
         alert('Submission failed. Try again.');
+        this.cdr.detectChanges();
       }
     });
   }

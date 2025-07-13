@@ -1,12 +1,110 @@
-<div *ngIf="loading">Loading exams...</div>
-<div *ngIf="!loading && availableExams.length === 0">No exams available.</div>
-<div *ngIf="!loading && availableExams.length > 0">
-  <div class="exam-list">
-    <div class="exam-card" *ngFor="let exam of availableExams">
-      <h3>{{ exam.title }}</h3>
-      <button [disabled]="exam.submitted" (click)="startExam(exam)">
-        {{ exam.submitted ? 'Already Submitted' : 'Start Exam' }}
-      </button>
+<div class="dashboard-container">
+  <div *ngIf="loading" class="loading">Loading available exams...</div>
+  <div *ngIf="!loading && availableExams.length === 0" class="empty">No available exams.</div>
+  <div *ngIf="!loading && availableExams.length > 0">
+    <h2 class="section-title">Available Exams</h2>
+    <div class="exam-list">
+      <div class="exam-card" *ngFor="let exam of availableExams">
+        <h3>{{ exam.title }}</h3>
+        <p class="exam-desc">{{ exam.description }}</p>
+        <button class="btn btn-primary" (click)="startExam(exam)">Start Exam</button>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div *ngIf="resultsLoading" class="loading">Loading your results...</div>
+  <div *ngIf="!resultsLoading && studentResults.length === 0" class="empty">No results yet.</div>
+  <div *ngIf="!resultsLoading && studentResults.length > 0">
+    <h2 class="section-title">Your Results</h2>
+    <div class="results-table-wrapper">
+      <table class="results-table">
+        <thead>
+          <tr>
+            <th>Exam</th>
+            <th>Score</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let result of studentResults">
+            <td>{{ result.examTitle || result.ExamTitle }}</td>
+            <td>{{ result.degree || result.Degree }}</td>
+            <td>{{ result.submittedAt || result.SubmittedAt | date:'short' }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
+
+<style>
+.dashboard-container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+}
+.section-title {
+  margin-bottom: 1rem;
+  color: #2c3e50;
+}
+.exam-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+.exam-card {
+  background: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  padding: 1.5rem;
+  min-width: 220px;
+  flex: 1 1 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.exam-card h3 {
+  margin: 0 0 0.5rem 0;
+}
+.exam-desc {
+  color: #555;
+  margin-bottom: 1rem;
+}
+.btn.btn-primary {
+  background: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1.2rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn.btn-primary:hover {
+  background: #0056b3;
+}
+.results-table-wrapper {
+  overflow-x: auto;
+}
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+.results-table th, .results-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e0e0e0;
+  text-align: left;
+}
+.results-table th {
+  background: #f1f1f1;
+  color: #333;
+}
+.loading, .empty {
+  color: #888;
+  text-align: center;
+  margin: 2rem 0;
+}
+</style>
