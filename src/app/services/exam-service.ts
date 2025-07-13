@@ -28,15 +28,27 @@ export class ExamService {
   }
 
   GetAllExams(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/GetAllExams`);
+    return this.http.get(`${this.apiUrl}/GetAllExams`, { headers: this.auth.getheaders() });
   }
   GetExamById(id:any): Observable<any> {
-    return this.http.get(`${this.apiUrl}/${id}`);
+    return this.http.get(`${this.apiUrl}/${id}`, { headers: this.auth.getheaders() });
   }
   EditExam(data:any,id:any):Observable<any>{
-    return this.http.put(`${this.apiUrl}/${id}`,data,{ headers: this.headers });
+    return this.http.put(`${this.apiUrl}/${id}`,data,{ headers: this.auth.getheaders() });
   }
    DeleteExam(id:any): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`,{ headers: this.headers });
+    return this.http.delete(`${this.apiUrl}/${id}`,{ headers: this.auth.getheaders() });
+  }
+  getAvailableExams(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/GetAllExams`, { headers: this.auth.getheaders() });
+  }
+  getExamQuestions(examId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${examId}/questions`, { headers: this.auth.getheaders() });
+  }
+  submitExam(examId: string, payload: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${examId}/submit`, payload, { headers: this.auth.getheaders() });
+  }
+  getStudentResults(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/results`, { headers: this.auth.getheaders() });
   }
 }

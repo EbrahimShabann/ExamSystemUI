@@ -1,0 +1,85 @@
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { ExamService } from '../../services/exam-service';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+
+@Component({
+  selector: 'app-take-exam',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
+  templateUrl: './take-exam.component.html',
+  styleUrls: ['./take-exam.component.css']
+})
+export class TakeExamComponent implements OnInit {
+  examId: string = '';
+  questions: any[] = [];
+  form: FormGroup;
+  loading = true;
+  submitting = false;
+
+  constructor(
+    private route: ActivatedRoute,
+    private fb: FormBuilder,
+    private examService: ExamService,
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {
+    this.form = this.fb.group({
+      answers: this.fb.array([])
+    });
+  }
+
+  ngOnInit() {
+    this.examId = this.route.snapshot.paramMap.get('id') || '';
+    this.examService.getExamQuestions(this.examId).subscribe({
+      next: (questions) => {
+        // Map backend fields to frontend expected fields
+        this.questions = questions.map((q: any) => ({
+          id: q.id,
+          text: q.questionText,
+          type: q.questionType === 0 ? 'MCQ' : 'Text', // adjust if needed
+          choices: q.choices?.map((c: any) => ({
+            id: c.id,
+            text: c.choiceText
+          })) || []
+        }));
+        this.initForm();
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: () => { this.loading = false; this.cdr.detectChanges(); }
+    });
+  }
+
+  initForm() {
+    const answersArray = this.form.get('answers') as FormArray;
+    this.questions.forEach(q => {
+      if (q.type === 'MCQ') {
+        answersArray.push(this.fb.group({ questionId: q.id, choiceId: [null, Validators.required] }));
+      } else {
+        answersArray.push(this.fb.group({ questionId: q.id, textAnswer: ['', Validators.required] }));
+      }
+    });
+  }
+
+  submitExam() {
+    if (this.form.invalid) return;
+    if (!confirm('Are you sure you want to submit your answers?')) return;
+    this.submitting = true;
+    const payload = { answers: this.form.value.answers };
+    this.examService.submitExam(this.examId, payload).subscribe({
+      next: () => {
+        alert('Exam submitted successfully!');
+        this.router.navigate(['/']); // Redirect to student dashboard
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.submitting = false;
+        alert('Submission failed. Try again.');
+        this.cdr.detectChanges();
+      }
+    });
+  }
+}
