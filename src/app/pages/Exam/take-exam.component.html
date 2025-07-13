@@ -1,6 +1,7 @@
 <div class="exam-page-container">
   <div *ngIf="loading" class="loading">Loading exam...</div>
-  <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="submitExam()" class="exam-form">
+  <!-- Exam Form -->
+  <form *ngIf="!loading && !submitted" [formGroup]="form" (ngSubmit)="submitExam()" class="exam-form">
     <div formArrayName="answers">
       <div *ngFor="let q of questions; let i = index" [formGroupName]="i" class="question-block">
         <div class="question-title"><b>Q{{i+1}}: {{ q.text }}</b></div>
@@ -18,7 +19,57 @@
     </div>
     <button type="submit" [disabled]="form.invalid || submitting" class="btn btn-primary submit-btn">Submit Exam</button>
   </form>
+
+  <!-- Result Review Section -->
+  <div *ngIf="submitted && resultDetails" class="result-review">
+    <h2>Exam Review</h2>
+    <div *ngFor="let q of resultDetails.questions; let i = index" class="question-block">
+      <div class="question-title"><b>Q{{i+1}}: {{ q.text }}</b></div>
+      <div *ngIf="q.type === 'MCQ'" class="choices-list">
+        <div *ngFor="let c of q.choices" class="choice-item"
+          [ngClass]="{
+            'correct': c.id === q.correctChoiceId,
+            'selected': c.id === q.selectedChoiceId && c.id !== q.correctChoiceId,
+            'wrong': c.id === q.selectedChoiceId && c.id !== q.correctChoiceId
+          }">
+          <label>
+            <input type="radio" [checked]="c.id === q.selectedChoiceId" disabled> {{ c.text }}
+            <span *ngIf="c.id === q.correctChoiceId" class="correct-label">(Correct Answer)</span>
+            <span *ngIf="c.id === q.selectedChoiceId && c.id !== q.correctChoiceId" class="wrong-label">(Your Answer)</span>
+          </label>
+        </div>
+      </div>
+      <div *ngIf="q.type === 'Text'" class="text-answer-block">
+        <div><b>Your Answer:</b> {{ q.userTextAnswer }}</div>
+        <div><b>Expected:</b> {{ q.correctTextAnswer }}</div>
+      </div>
+    </div>
+    <button *ngIf="showResultButton" (click)="goToDashboard()" class="btn btn-primary submit-btn">Show Result</button>
+  </div>
 </div>
+
+<style>
+/* ...existing styles... */
+.result-review .correct {
+  background: #d4edda;
+}
+.result-review .wrong {
+  background: #f8d7da;
+}
+.result-review .selected {
+  border: 1px solid #ffc107;
+}
+.correct-label {
+  color: #28a745;
+  font-weight: bold;
+  margin-left: 8px;
+}
+.wrong-label {
+  color: #dc3545;
+  font-weight: bold;
+  margin-left: 8px;
+}
+</style>
 
 <style>
 .exam-page-container {

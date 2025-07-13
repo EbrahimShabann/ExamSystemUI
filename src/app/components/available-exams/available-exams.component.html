@@ -28,7 +28,7 @@
         <tbody>
           <tr *ngFor="let result of studentResults">
             <td>{{ result.examTitle || result.ExamTitle }}</td>
-            <td>{{ result.degree || result.Degree }}</td>
+            <td>{{ (result.degree !== null && result.degree !== undefined) ? result.degree : ((result.Degree !== null && result.Degree !== undefined) ? result.Degree : '') }}</td>
             <td>{{ result.submittedAt || result.SubmittedAt | date:'short' }}</td>
           </tr>
         </tbody>
