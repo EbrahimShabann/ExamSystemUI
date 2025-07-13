@@ -14,24 +14,28 @@ import { IUser } from '../../models/iuser';
 export class Navbar implements OnInit{
   isLogged:boolean=false;
   userName: string = '';
-  userRole: string = '';
-  constructor(private router:Router,private auth:Auth,private userService: UserService,private cdr: ChangeDetectorRef){}
+  userRole!:string|null
+  constructor(private router:Router,private auth:Auth,private userService: UserService,private cdr: ChangeDetectorRef){
+ 
+  }
 
   ngOnInit(): void {
     this.refreshUserName();
     // Listen for router events to refresh username after login
     this.router.events.subscribe(() => {
       this.refreshUserName();
+      //  console.log(this.userRole)
     });
   }
 
   refreshUserName() {
+
     this.updateLoginStatus();
     if (this.isLogged) {
       this.userService.getCurrentUser().subscribe({
         next: (user: any) => {
           this.userName = user.userName;
-          this.userRole = user.role || '';
+            this.userRole= localStorage.getItem('userRole');
           this.cdr.detectChanges();
         },
         error: () => { this.userName = ''; this.userRole = ''; }

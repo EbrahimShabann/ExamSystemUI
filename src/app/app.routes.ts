@@ -8,12 +8,13 @@ import { NotFound } from './pages/not-found/not-found';
 import { Exams } from './pages/Exam/exams';
 import { AvailableExamsComponent } from './components/available-exams/available-exams.component';
 import { TakeExamComponent } from './pages/Exam/take-exam.component';
+import { roleGuardGuard } from './services/role-guard-guard';
 
 export const routes: Routes = [
     { path: '', component: AvailableExamsComponent, canActivate: [authGuard] },
-    { path: 'exam/:id', component: TakeExamComponent, canActivate: [authGuard] },
-    { path: 'exams', component: Exams, canActivate: [authGuard] },
-    { path: 'exams/:id/upsert', component: ExamForm, canActivate: [authGuard] },
+    { path: 'exams/:id', component: TakeExamComponent, canActivate: [authGuard] },
+    { path: 'exams', component: Exams, canActivate: [authGuard,roleGuardGuard] },
+    { path: 'exams/:id/upsert', component: ExamForm, canActivate: [authGuard,roleGuardGuard] },
     { path: 'account', component: Account,
         children: [
             { path: '', redirectTo: 'login', pathMatch: 'full' },

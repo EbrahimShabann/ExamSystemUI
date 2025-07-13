@@ -3,16 +3,16 @@
     <div class="container my-5" >
   <div class="card shadow m-5">
     <div class="card-header text-white bg-dark d-flex justify-content-center">
-            <h2 class="app-title card-title"> {{ExamId == 0?"Add New Exam":"Edit Exam"}}</h2>
+            <h2 class="app-title card-title"> {{QuesId == 0?"Add New Exam":"Edit Exam"}}</h2>
     </div>
 
     <div class="card-body">
-   <form [formGroup]="ExamForm" (ngSubmit)="ExamHandler()">    
+   <form [formGroup]="QuesForm" (ngSubmit)="QuesHandler()">    
           <div class="row g-3 mb-4">
               <div class="col-md-12">
-                <input formControlName="title" type="text" class="form-control alert alert-secondary" placeholder="Enter Exam Title" >
-              @if(getTitle.touched&& getTitle.hasError('required')){
-              <span class="alert alert-warning text-danger">Exam Title is Required</span>
+                <input formControlName="QuestionText" type="text" class="form-control alert alert-secondary" placeholder="Enter Question Text" >
+              @if(getQuesText.touched&& getQuesText.hasError('required')){
+              <span class="alert alert-warning text-danger">Question Text is Required</span>
               }
               @else if (getTitle.hasError('minlength')) {
              <span class="alert alert-warning text-danger">Exam Title can't be less than 2 chars</span>
@@ -40,10 +40,10 @@
             </div>
              
           
-              <div >
+              <div *ngIf="ExamId==0">
                 <button class="form-control btn btn-outline-dark"  (click)="addQuesField()">Add Question</button>
               </div>
-            <div formArrayName="questions" >
+            <div formArrayName="questions" *ngIf="ExamId==0">
               <div
                 *ngFor="let ques of getQuestions.controls; let i = index"
                 [formGroupName]="i"

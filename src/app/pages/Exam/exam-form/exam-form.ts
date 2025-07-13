@@ -38,6 +38,7 @@ export class ExamForm implements OnInit {
         title:'',
         description:'',
         duration:'',
+        questions:[]
         
       });
       },
@@ -57,6 +58,29 @@ export class ExamForm implements OnInit {
                 duration: this.Exam.duration,
                 
               });
+              this.getQuestions.clear();
+
+  this.Exam.questions.forEach((question: any) => {
+    const questionGroup = new FormGroup(
+      {
+        QuestionText: new FormControl(question.questionText, Validators.required),
+        QuestionType: new FormControl(question.questionType, Validators.required),
+        choices: new FormArray([]),
+      },
+      { validators: this.validateChoicesIfNeeded }
+    );
+
+    // Fill choices for each question
+    question.choices.forEach((choice: any) => {
+      const choiceGroup = new FormGroup({
+        ChoiceText: new FormControl(choice.choiceText, Validators.required),
+        IsCorrect: new FormControl(choice.isCorrect, Validators.required),
+      });
+      (questionGroup.get('choices') as FormArray).push(choiceGroup);
+    });
+
+    this.getQuestions.push(questionGroup);
+  });
             }
 
         },
@@ -158,7 +182,11 @@ removeChoiceField(quesIndex:number,choiceIndex:number){
             this.examService.notifyExamsChanged(); // Notify list to update
             this.router.navigate(['/exams'])
           },
-          error:(error)=>{alert(error.message)}
+          error:(error)=>{
+             console.log(this.ExamForm.value)
+            alert(error.message)
+           
+          }
         });
       } else {
         // Add new exam
