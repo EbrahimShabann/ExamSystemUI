@@ -7,9 +7,9 @@ import { Auth } from './auth';
   providedIn: 'root'
 })
 export class ExamService {
-  headers:any;
+ 
     constructor(private http: HttpClient,private auth:Auth) {
-        this.headers=this.auth.getheaders();
+        
     }
 
    
@@ -23,8 +23,8 @@ export class ExamService {
    }
 
   CreateExam(data: any): Observable<any> {
-    console.log(this.headers);
-    return this.http.post(`${this.apiUrl}`, data, { headers: this.headers });
+
+    return this.http.post(`${this.apiUrl}`, data, { headers: this.auth.getheaders()  });
   }
 
   GetAllExams(): Observable<any> {
