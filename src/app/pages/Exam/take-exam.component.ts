@@ -18,6 +18,9 @@ export class TakeExamComponent implements OnInit {
   form: FormGroup;
   loading = true;
   submitting = false;
+  submitted = false;
+  showResultButton = false;
+  resultDetails: any = null; // Holds the result with correct answers after submission
 
   constructor(
     private route: ActivatedRoute,
@@ -70,9 +73,12 @@ export class TakeExamComponent implements OnInit {
     this.submitting = true;
     const payload = { answers: this.form.value.answers };
     this.examService.submitExam(this.examId, payload).subscribe({
-      next: () => {
+      next: (result) => {
         alert('Exam submitted successfully!');
-        this.router.navigate(['/']); // Redirect to student dashboard
+        this.submitted = true;
+        this.showResultButton = true;
+        this.resultDetails = result; // Expecting result to contain correct answers and user answers
+        this.submitting = false;
         this.cdr.detectChanges();
       },
       error: () => {
@@ -81,5 +87,9 @@ export class TakeExamComponent implements OnInit {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  goToDashboard() {
+    this.router.navigate(['/']);
   }
 }
