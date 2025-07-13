@@ -1,11 +1,10 @@
-import { ExamService } from './../../../services/exam-service';
-
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { ExamService } from './../../../services/exam-service';
 
 @Component({
   selector: 'app-exam-details',
-  imports: [RouterLink],
+
   templateUrl: './exam-details.html',
   styleUrl: './exam-details.css'
 })
