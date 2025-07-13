@@ -9,9 +9,11 @@ import { Exams } from './pages/Exam/exams';
 import { AvailableExamsComponent } from './components/available-exams/available-exams.component';
 import { TakeExamComponent } from './pages/Exam/take-exam.component';
 import { roleGuardGuard } from './services/role-guard-guard';
+import { Home } from './pages/home/home';
 
 export const routes: Routes = [
-    { path: '', component: AvailableExamsComponent, canActivate: [authGuard] },
+     { path: 'home', component: Home },
+    { path: 'AvailableExams', component: AvailableExamsComponent, canActivate: [authGuard] },
     { path: 'exams/:id', component: TakeExamComponent, canActivate: [authGuard] },
     { path: 'exams', component: Exams, canActivate: [authGuard,roleGuardGuard] },
     { path: 'exams/:id/upsert', component: ExamForm, canActivate: [authGuard,roleGuardGuard] },

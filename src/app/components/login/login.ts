@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Auth } from '../../services/auth';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +15,7 @@ export class LoginComponent {
   loading = false;
   message = '';
 
-  constructor(private fb: FormBuilder, private auth: Auth) {
+  constructor(private fb: FormBuilder, private auth: Auth,private router:Router) {
     this.loginForm = this.fb.group({
       email: ['', Validators.required],
       password: ['', Validators.required]
@@ -28,6 +29,7 @@ export class LoginComponent {
     this.auth.login(this.loginForm.value).subscribe({
       next: (result) => {
         this.message = 'Login successful!';
+        this.router.navigate(['/home']);
         console.log(result);
         // localStorage.setItem('token',result.token);  
         this.loading = false;
