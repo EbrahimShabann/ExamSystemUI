@@ -39,4 +39,16 @@ export class ExamService {
    DeleteExam(id:any): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`,{ headers: this.headers });
   }
+
+  getAvailableExams(): Observable<any[]> {
+    return this.http.get<any[]>(`/api/exams/available`, { headers: this.headers });
+  }
+
+  getExamQuestions(examId: string): Observable<any[]> {
+    return this.http.get<any[]>(`/api/exams/${examId}/questions`, { headers: this.headers });
+  }
+
+  submitExam(examId: string, payload: any): Observable<any> {
+    return this.http.post(`/api/exams/${examId}/submit`, payload, { headers: this.headers });
+  }
 }

@@ -1,0 +1,12 @@
+<div *ngIf="loading">Loading exams...</div>
+<div *ngIf="!loading && availableExams.length === 0">No exams available.</div>
+<div *ngIf="!loading && availableExams.length > 0">
+  <div class="exam-list">
+    <div class="exam-card" *ngFor="let exam of availableExams">
+      <h3>{{ exam.title }}</h3>
+      <button [disabled]="exam.submitted" (click)="startExam(exam)">
+        {{ exam.submitted ? 'Already Submitted' : 'Start Exam' }}
+      </button>
+    </div>
+  </div>
+</div>

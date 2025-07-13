@@ -1,0 +1,19 @@
+<div *ngIf="loading">Loading exam...</div>
+<form *ngIf="!loading" [formGroup]="form" (ngSubmit)="submitExam()">
+  <div formArrayName="answers">
+    <div *ngFor="let q of questions; let i = index" [formGroupName]="i" class="question-block">
+      <div><b>{{ q.text }}</b></div>
+      <div *ngIf="q.type === 'MCQ'">
+        <div *ngFor="let c of q.choices">
+          <label>
+            <input type="radio" [formControlName]="'choiceId'" [value]="c.id"> {{ c.text }}
+          </label>
+        </div>
+      </div>
+      <div *ngIf="q.type === 'Text'">
+        <textarea formControlName="textAnswer" rows="3" cols="40"></textarea>
+      </div>
+    </div>
+  </div>
+  <button type="submit" [disabled]="form.invalid || submitting">Submit Exam</button>
+</form>

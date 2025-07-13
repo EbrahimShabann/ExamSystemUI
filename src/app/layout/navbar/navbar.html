@@ -1,4 +1,4 @@
- <div class="bg-dark text-white py-2 fs-6">
+<div class="bg-dark text-white py-2 fs-6">
         <div class="container">
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
                 <div class="mb-2 mb-md-0">
@@ -36,6 +36,10 @@
                         <a class="nav-link text-secondary fw-semibold mx-3" 
                         [routerLink]="['/exams',0,'upsert']" [routerLinkActive]="'bg-dark text-light'"
                         [routerLinkActiveOptions]="{exact:true}">Add Exam</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-secondary fw-semibold mx-3"
+                         [routerLink]="['/']" [routerLinkActive]="'bg-dark text-light'" [routerLinkActiveOptions]="{exact:true}">Student Dashboard</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="btn btn-light dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"
