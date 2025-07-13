@@ -33,7 +33,9 @@ export class Auth {
     .pipe(
       tap((res: any) => {
         const token = res.token;
+        const userRole= res.userRole;
 
+        localStorage.setItem('userRole',userRole);
         // Save to cookie for 1 hour
         const expires = new Date(Date.now() + 60 * 60 * 1000).toUTCString();
         document.cookie = `token=${token}; expires=${expires}; path=/`;
