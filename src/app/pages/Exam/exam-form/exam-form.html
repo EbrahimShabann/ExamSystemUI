@@ -55,7 +55,7 @@
                   class="form-control mb-2"
                   placeholder="Enter Question Text"
                 />
-                <select formControlName="QuestionType" class="form-control mb-2">
+                <select formControlName="QuestionType" class="form-control mb-2" (change)="onQuestionTypeChange(i, $event)">
                   <option value="">Select Question Type</option>
                   <option value="MCQ">MCQ</option>
                   <option value="TF">True / False</option>

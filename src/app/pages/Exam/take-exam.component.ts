@@ -42,12 +42,14 @@ export class TakeExamComponent implements OnInit {
         this.questions = questions.map((q: any) => ({
           id: q.id,
           text: q.questionText,
-          type: q.questionType === 0 ? 'MCQ' : 'Text', // adjust if needed
+          type: q.questionType === 'MCQ' || q.questionType === 0 ? 'MCQ' : 
+                q.questionType === 'TF' || q.questionType === 1 ? 'TF' : 'Text',
           choices: q.choices?.map((c: any) => ({
             id: c.id,
             text: c.choiceText
           })) || []
         }));
+        console.log('Mapped questions:', this.questions);
         this.initForm();
         this.loading = false;
         this.cdr.detectChanges();
@@ -59,7 +61,7 @@ export class TakeExamComponent implements OnInit {
   initForm() {
     const answersArray = this.form.get('answers') as FormArray;
     this.questions.forEach(q => {
-      if (q.type === 'MCQ') {
+      if (q.type === 'MCQ' || q.type === 'TF') {
         answersArray.push(this.fb.group({ questionId: q.id, choiceId: [null, Validators.required] }));
       } else {
         answersArray.push(this.fb.group({ questionId: q.id, textAnswer: ['', Validators.required] }));
@@ -71,7 +73,10 @@ export class TakeExamComponent implements OnInit {
     if (this.form.invalid) return;
     if (!confirm('Are you sure you want to submit your answers?')) return;
     this.submitting = true;
+    
     const payload = { answers: this.form.value.answers };
+    console.log('Form payload:', JSON.stringify(payload, null, 2));
+    console.log('Questions:', this.questions);
     this.examService.submitExam(this.examId, payload).subscribe({
       next: (result) => {
         alert('Exam submitted successfully!');
