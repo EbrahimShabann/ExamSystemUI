@@ -17,7 +17,7 @@
 
     <nav class="navbar navbar-expand-lg bg-white py-3 shadow-sm">
         <div class="container">
-            <a class="navbar-brand text-success fs-1 fw-bold" href="#">Exam System</a>
+            <a class="navbar-brand text-success fs-1 fw-bold" href="#">Exam Pro System</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -27,19 +27,25 @@
                         <a class="nav-link text-secondary fw-semibold mx-3"
                          [routerLink]="['/home']" [routerLinkActive]="'bg-dark text-light'" [routerLinkActiveOptions]="{exact:true}">Home</a>
                     </li>
-                    <li class="nav-item">
+                @if(userRole=='Teacher'){
+                    <li class="nav-item" > 
                         <a class="nav-link text-secondary fw-semibold mx-3" 
                         [routerLink]="['/exams']" [routerLinkActive]="'bg-dark text-light'"
                         [routerLinkActiveOptions]="{exact:true}">Exams</a>
                     </li>
-                    <li class="nav-item">
+                }
+                    
+                  
+                    <li class="nav-item" *ngIf="userRole==='Teacher'">
                         <a class="nav-link text-secondary fw-semibold mx-3" 
                         [routerLink]="['/exams',0,'upsert']" [routerLinkActive]="'bg-dark text-light'"
                         [routerLinkActiveOptions]="{exact:true}">Add Exam</a>
                     </li>
+            
+                   
                     <li class="nav-item" *ngIf="userRole === 'Student'">
                         <a class="nav-link text-secondary fw-semibold mx-3"
-                         [routerLink]="['/']" [routerLinkActive]="'bg-dark text-light'" [routerLinkActiveOptions]="{exact:true}">Student Dashboard</a>
+                         [routerLink]="['/AvailableExams']" [routerLinkActive]="'bg-dark text-light'" [routerLinkActiveOptions]="{exact:true}">Student Dashboard</a>
                     </li>
                 </ul>
                 <div class="d-flex align-items-center">

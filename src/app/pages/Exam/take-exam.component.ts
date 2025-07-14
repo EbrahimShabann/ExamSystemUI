@@ -84,6 +84,7 @@ export class TakeExamComponent implements OnInit {
         this.showResultButton = true;
         this.resultDetails = result; // Expecting result to contain correct answers and user answers
         this.submitting = false;
+        this.router.navigate(['/AvailableExams'])
         this.cdr.detectChanges();
       },
       error: () => {

@@ -7,9 +7,9 @@ import { Auth } from './auth';
   providedIn: 'root'
 })
 export class ExamService {
-  headers:any;
+ 
     constructor(private http: HttpClient,private auth:Auth) {
-        this.headers=this.auth.getheaders();
+        
     }
 
    

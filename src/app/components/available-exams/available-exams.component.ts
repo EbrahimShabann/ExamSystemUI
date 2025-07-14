@@ -54,6 +54,6 @@ export class AvailableExamsComponent implements OnInit {
 
   startExam(exam: any) {
     console.log('Exam ID:', exam.id, exam); // Debug: check the ID being passed
-    this.router.navigate(['/exam', exam.id]);
+    this.router.navigate(['/exams', exam.id]);
   }
 }
