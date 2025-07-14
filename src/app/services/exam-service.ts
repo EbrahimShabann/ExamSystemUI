@@ -23,8 +23,7 @@ export class ExamService {
    }
 
   CreateExam(data: any): Observable<any> {
-    console.log(this.headers);
-    return this.http.post(`${this.apiUrl}`, data, { headers: this.headers });
+    return this.http.post(`${this.apiUrl}`, data, { headers: this.auth.getheaders() });
   }
 
   GetAllExams(): Observable<any> {
