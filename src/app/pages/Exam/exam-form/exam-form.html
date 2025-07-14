@@ -40,9 +40,7 @@
             </div>
              
           
-              <div >
-                <button class="form-control btn btn-outline-dark"  (click)="addQuesField()">Add Question</button>
-              </div>
+             
             <div formArrayName="questions" >
               <div
                 *ngFor="let ques of getQuestions.controls; let i = index"
@@ -95,7 +93,9 @@
 
               </div>
             </div>
-
+             <div >
+                <button class="form-control btn btn-outline-dark"  (click)="addQuesField()">Add Question</button>
+              </div>
               <div class="col-12 text-center">
                   <button class="btn btn-outline-dark col-6" [routerLink]="['/exams']">Back To Exams</button>
 
