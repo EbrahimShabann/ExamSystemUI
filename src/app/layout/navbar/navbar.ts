@@ -43,6 +43,7 @@ export class Navbar implements OnInit{
     } else {
       this.userName = '';
       this.userRole = '';
+       this.cdr.detectChanges();
     }
   }
 
@@ -53,8 +54,9 @@ export class Navbar implements OnInit{
   logout(){
     this.auth.logout();
     this.refreshUserName();
-    this.router.navigate(['/account/login']);
     this.cdr.detectChanges();
+    this.router.navigate(['/home']);
+    
   }
 
 }

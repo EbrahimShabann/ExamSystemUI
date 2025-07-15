@@ -7,37 +7,32 @@ import { Auth } from './auth';
   providedIn: 'root'
 })
 export class ExamService {
- 
-    constructor(private http: HttpClient,private auth:Auth) {
-        
-    }
+  constructor(private http: HttpClient, private auth: Auth) {}
 
-   
-   private apiUrl = 'https://localhost:7233/api/Exam'; 
+  private apiUrl = 'https://localhost:7233/api/Exam';
 
-   private examsChangedSource = new BehaviorSubject<void>(undefined);
-   examsChanged$ = this.examsChangedSource.asObservable();
+  private examsChangedSource = new BehaviorSubject<void>(undefined);
+  examsChanged$ = this.examsChangedSource.asObservable();
 
-   notifyExamsChanged() {
-     this.examsChangedSource.next();
-   }
+  notifyExamsChanged() {
+    this.examsChangedSource.next();
+  }
 
   CreateExam(data: any): Observable<any> {
-
-    return this.http.post(`${this.apiUrl}`, data, { headers: this.auth.getheaders()  });
+    return this.http.post(`${this.apiUrl}`, data, { headers: this.auth.getheaders() });
   }
 
   GetAllExams(): Observable<any> {
     return this.http.get(`${this.apiUrl}/GetAllExams`, { headers: this.auth.getheaders() });
   }
-  GetExamById(id:any): Observable<any> {
+  GetExamById(id: any): Observable<any> {
     return this.http.get(`${this.apiUrl}/${id}`, { headers: this.auth.getheaders() });
   }
-  EditExam(data:any,id:any):Observable<any>{
-    return this.http.put(`${this.apiUrl}/${id}`,data,{ headers: this.auth.getheaders() });
+  EditExam(data: any, id: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, data, { headers: this.auth.getheaders() });
   }
-   DeleteExam(id:any): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`,{ headers: this.auth.getheaders() });
+  DeleteExam(id: any): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`, { headers: this.auth.getheaders() });
   }
   getAvailableExams(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/GetAllExams`, { headers: this.auth.getheaders() });
@@ -50,5 +45,8 @@ export class ExamService {
   }
   getStudentResults(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/results`, { headers: this.auth.getheaders() });
+  }
+  getExamResults(examId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${examId}/results`, { headers: this.auth.getheaders() });
   }
 }

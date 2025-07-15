@@ -3,21 +3,40 @@
   <!-- Exam Form -->
   <form *ngIf="!loading && !submitted" [formGroup]="form" (ngSubmit)="submitExam()" class="exam-form">
     <div formArrayName="answers">
-      <div *ngFor="let q of questions; let i = index" [formGroupName]="i" class="question-block">
-        <div class="question-title"><b>Q{{i+1}}: {{ q.text }}</b></div>
-        <div *ngIf="q.type === 'MCQ'" class="choices-list">
-          <div *ngFor="let c of q.choices" class="choice-item">
+      <div *ngFor="let idx of pagedAnswersArray; let j = index" [formGroupName]="idx" class="question-block">
+        <div class="question-title"><b>Q{{idx+1}}: {{ questions[idx].text }}</b></div>
+        <div *ngIf="questions[idx].type === 'MCQ'" class="choices-list">
+          <div *ngFor="let c of questions[idx].choices" class="choice-item">
             <label>
               <input type="radio" [formControlName]="'choiceId'" [value]="c.id"> {{ c.text }}
             </label>
           </div>
         </div>
-        <div *ngIf="q.type === 'Text'" class="text-answer-block">
+        <div *ngIf="questions[idx].type === 'Text'" class="text-answer-block">
           <textarea formControlName="textAnswer" rows="3" cols="40" placeholder="Type your answer..."></textarea>
+        </div>
+        <div *ngIf="questions[idx].type === 'TF'" class="tf-answer-block">
+          <div *ngIf="questions[idx].choices && questions[idx].choices.length > 0; else tfError">
+            <div *ngFor="let c of questions[idx].choices" class="choice-item">
+              <label>
+                <input type="radio" formControlName="choiceId" [value]="c.id"> {{ c.text }}
+              </label>
+            </div>
+          </div>
+          <ng-template #tfError>
+            <div class="alert alert-warning">
+              <strong>Question Setup Error:</strong> This True/False question is missing choices. Please contact your instructor to recreate this question.
+            </div>
+          </ng-template>
         </div>
       </div>
     </div>
-    <button type="submit" [disabled]="form.invalid || submitting" class="btn btn-primary submit-btn">Submit Exam</button>
+    <div class="d-flex justify-content-between align-items-center my-3">
+      <button type="button" class="btn btn-secondary" (click)="prevPage()" [disabled]="currentPage === 1">Prev</button>
+      <span>Page {{currentPage}} / {{totalPages}}</span>
+      <button type="button" class="btn btn-primary" (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+    </div>
+    <button *ngIf="userRole !== 'Teacher'" type="submit" [disabled]="form.invalid || submitting" class="btn btn-primary submit-btn">Submit Exam</button>
   </form>
 
   <!-- Result Review Section -->
@@ -42,6 +61,10 @@
       <div *ngIf="q.type === 'Text'" class="text-answer-block">
         <div><b>Your Answer:</b> {{ q.userTextAnswer }}</div>
         <div><b>Expected:</b> {{ q.correctTextAnswer }}</div>
+      </div>
+      <div *ngIf="q.type === 'TF'" class="tf-answer-block">
+        <div><b>Your Answer:</b> {{ q.userTFAnswer ? 'True' : 'False' }}</div>
+        <div><b>Expected:</b> {{ q.correctTFAnswer ? 'True' : 'False' }}</div>
       </div>
     </div>
     <button *ngIf="showResultButton" (click)="goToDashboard()" class="btn btn-primary submit-btn">Show Result</button>

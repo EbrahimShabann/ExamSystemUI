@@ -40,9 +40,7 @@
             </div>
              
           
-              <div >
-                <button class="form-control btn btn-outline-dark"  (click)="addQuesField()">Add Question</button>
-              </div>
+             
             <div formArrayName="questions" >
               <div
                 *ngFor="let ques of getQuestions.controls; let i = index"
@@ -57,7 +55,7 @@
                   class="form-control mb-2"
                   placeholder="Enter Question Text"
                 />
-                <select formControlName="QuestionType" class="form-control mb-2">
+                <select formControlName="QuestionType" class="form-control mb-2" (change)="onQuestionTypeChange(i, $event)">
                   <option value="">Select Question Type</option>
                   <option value="MCQ">MCQ</option>
                   <option value="TF">True / False</option>
@@ -95,7 +93,9 @@
 
               </div>
             </div>
-
+             <div >
+                <button class="form-control btn btn-outline-dark"  (click)="addQuesField()">Add Question</button>
+              </div>
               <div class="col-12 text-center">
                   <button class="btn btn-outline-dark col-6" [routerLink]="['/exams']">Back To Exams</button>
 
