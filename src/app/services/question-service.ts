@@ -11,7 +11,7 @@ headers:any;
   constructor(private http:HttpClient, private auth: Auth) {
     this.headers=auth.getheaders();
    }
-private apiUrl='http://exampro.runasp.net/api/Questions'
+private apiUrl='https://exampro.runasp.net/api/Questions'
 
 
 addQues(data:any):Observable<any>{

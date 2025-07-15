@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class Auth {
-  private apiUrl = 'http://exampro.runasp.net/api/Auth'; 
+  private apiUrl = 'https://exampro.runasp.net/api/Auth'; 
  headers:any;
 
   constructor(private http: HttpClient,private router:Router) {}
