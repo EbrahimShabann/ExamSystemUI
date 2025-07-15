@@ -8,5 +8,5 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './account.css'
 })
 export class Account {
-
+token= document.cookie.match(new RegExp('(^| )token=([^;]+)'));
 }

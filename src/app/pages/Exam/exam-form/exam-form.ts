@@ -67,6 +67,29 @@ export class ExamForm implements OnInit {
                   description: this.Exam.description,
                   duration: this.Exam.duration,
                 });
+                 this.getQuestions.clear();
+
+                this.Exam.questions.forEach((question: any) => {
+                  const questionGroup = new FormGroup(
+                    {
+                      QuestionText: new FormControl(question.questionText, Validators.required),
+                      QuestionType: new FormControl(question.questionType, Validators.required),
+                      choices: new FormArray([]),
+                    },
+                    { validators: this.validateChoicesIfNeeded }
+                  );
+
+                  // Fill choices for each question
+                  question.choices.forEach((choice: any) => {
+                    const choiceGroup = new FormGroup({
+                      ChoiceText: new FormControl(choice.choiceText, Validators.required),
+                      IsCorrect: new FormControl(choice.isCorrect, Validators.required),
+                    });
+                    (questionGroup.get('choices') as FormArray).push(choiceGroup);
+                  });
+
+                  this.getQuestions.push(questionGroup);
+                });
               }
             },
             error: (error) => { console.log(error); }
