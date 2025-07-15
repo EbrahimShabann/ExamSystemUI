@@ -50,8 +50,11 @@
                         </a>
 
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" [routerLink]="['/account/register']"
+                            @if(!isLogged){
+                                     <li><a class="dropdown-item" [routerLink]="['/account/register']"
                                 [routerLinkActive]="'bg-dark text-light'" [routerLinkActiveOptions]="{exact:true}">Register</a></li>
+                            }
+                           
                             <li *ngIf="!isLogged"><a class="dropdown-item" [routerLink]="['/account/login']"
                                 [routerLinkActive]="'bg-dark text-light'" [routerLinkActiveOptions]="{exact:true}">Login</a></li>
                            <li *ngIf="isLogged"><a class="dropdown-item" 
