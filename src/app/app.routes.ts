@@ -6,7 +6,8 @@ import { ExamForm } from './pages/Exam/exam-form/exam-form';
 import { Account } from './pages/account/account';
 import { NotFound } from './pages/not-found/not-found';
 import { Exams } from './pages/Exam/exams';
-import { AvailableExamsComponent } from './components/available-exams/available-exams.component';
+import { StudentDashboardComponent } from './components/student-dashboard/student-dashboard.component';
+import { TeacherDashboardComponent } from './components/teacher-dashboard/teacher-dashboard.component';
 import { TakeExamComponent } from './pages/Exam/take-exam.component';
 import { roleGuardGuard } from './services/role-guard-guard';
 import { Home } from './pages/home/home';
@@ -14,10 +15,11 @@ import { Home } from './pages/home/home';
 export const routes: Routes = [
      { path: '', component: Home },
      { path: 'home', component: Home },
-    { path: 'AvailableExams', component: AvailableExamsComponent, canActivate: [authGuard] },
+    { path: 'AvailableExams', component: StudentDashboardComponent, canActivate: [authGuard] },
     { path: 'exams/:id', component: TakeExamComponent, canActivate: [authGuard] },
     { path: 'exams', component: Exams, canActivate: [authGuard,roleGuardGuard] },
     { path: 'exams/:id/upsert', component: ExamForm, canActivate: [authGuard,roleGuardGuard] },
+    { path: 'teacher-dashboard', component: TeacherDashboardComponent, canActivate: [roleGuardGuard] },
     { path: 'account', component: Account,
         children: [
             { path: '', redirectTo: 'login', pathMatch: 'full' },

@@ -2,12 +2,14 @@ import { ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { ExamService } from '../../services/exam-service';
 import { IExam } from '../../models/iexam';
+import { IExamResult } from '../../models/iexam-result';
 import { Subscription } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
   selector: 'app-exams-list',
-  imports: [RouterLink],
+  imports: [RouterLink, CommonModule],
   templateUrl: './exams-list.html',
   styleUrl: './exams-list.css'
 })
@@ -17,6 +19,10 @@ export class ExamsList implements OnInit, OnDestroy {
   ){ }
 
   Exams:IExam[]=[];
+  showResults: boolean = false;
+  selectedExamTitle: string = '';
+  selectedExamId: number | null = null;
+  examResults: IExamResult[] = [];
   private examsChangedSub!: Subscription;
 
   ngOnInit(): void {
@@ -64,6 +70,28 @@ export class ExamsList implements OnInit, OnDestroy {
       }
       }
      
+  }
+
+  showExamResults(exam: IExam) {
+    this.selectedExamId = exam.id;
+    this.selectedExamTitle = exam.title;
+    this.showResults = true;
+    this.ExamService.getExamResults(exam.id.toString()).subscribe({
+      next: (results) => {
+        // Use backend property names directly for display
+        this.examResults = results;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    });
+  }
+
+  backToExams() {
+    this.showResults = false;
+    this.selectedExamId = null;
+    this.examResults = [];
   }
 
 }
