@@ -39,5 +39,9 @@ An Angular frontend application for an online examination system. This project i
 ### Clone the Repository
 
 ```bash
+## Angular UI Repo
 git clone https://github.com/EbrahimShabann/ExamSystemUI.git
+
+## API Repo
+git clone https://github.com/EbrahimShabann/Exam-System-API.git
 cd ExamSystemUI
