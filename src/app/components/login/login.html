@@ -23,7 +23,7 @@
       <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
     </button>
     <div class="alert mt-4" 
-         [ngClass]="{'alert-success': message?.includes('success'), 'alert-danger': message && !message?.includes('success')}" 
+         [ngClass]="{'alert-success': message.includes('success'), 'alert-danger': message && !message.includes('success')}" 
          *ngIf="message">
       {{ message }}
     </div>
