@@ -1,3 +1,4 @@
+import { Component } from '@angular/core';
 import { authGuard } from './services/auth-guard';
 import { Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login';
@@ -10,6 +11,7 @@ import { AvailableExamsComponent } from './components/available-exams/available-
 import { TakeExamComponent } from './pages/Exam/take-exam.component';
 import { roleGuardGuard } from './services/role-guard-guard';
 import { Home } from './pages/home/home';
+import { Results } from './pages/results/results';
 
 export const routes: Routes = [
      { path: 'home', component: Home },
@@ -23,5 +25,6 @@ export const routes: Routes = [
             { path: 'login', component: LoginComponent },
             { path: 'register', component: RegisterComponent }
         ] },
+    { path: 'result', component: Results},
     { path: '**', component: NotFound },
 ];
