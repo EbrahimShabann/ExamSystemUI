@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Input } from '@angular/core';
 import {
   AbstractControl,
   FormArray,
@@ -21,7 +21,7 @@ import { IQuestion, IChoice } from '../../../models/iquestion';
   styleUrl: './exam-form.css'
 })
 export class ExamForm implements OnInit {
-  ExamId: any;
+  @Input() ExamId: any;
   Exam: any;
 
   ExamForm = new FormGroup({
@@ -39,6 +39,16 @@ export class ExamForm implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // If ExamId is set as input (from parent, not via route), treat as add form
+    if (this.ExamId === 0 || this.ExamId === '0') {
+      this.ExamForm.patchValue({
+        title: '',
+        description: '',
+        duration: '',
+      });
+      return;
+    }
+    // Otherwise, get from route (edit mode)
     this.activatedRoute.paramMap.subscribe({
       next: (params) => {
         this.ExamId = params.get('id');
@@ -47,7 +57,6 @@ export class ExamForm implements OnInit {
           description: '',
           duration: '',
         });
-
         if (this.ExamId !== '0') {
           this.examService.GetExamById(this.ExamId).subscribe({
             next: (response) => {
@@ -198,7 +207,7 @@ onQuestionTypeChange(quesIndex: number, event: any) {
         duration: formValue.duration,
         questions
       };
-      if (this.ExamId !== '0') {
+      if (this.ExamId && this.ExamId !== '0' && this.ExamId !== null && this.ExamId !== undefined) {
         // Update existing exam
         this.examService.EditExam(payload, this.ExamId).subscribe({
           next: (res) => {

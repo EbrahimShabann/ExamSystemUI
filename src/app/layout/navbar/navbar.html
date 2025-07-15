@@ -28,21 +28,13 @@
                          [routerLink]="['/home']" [routerLinkActive]="'bg-dark text-light'" [routerLinkActiveOptions]="{exact:true}">Home</a>
                     </li>
                 @if(userRole=='Teacher'){
-                    <li class="nav-item" > 
-                        <a class="nav-link text-secondary fw-semibold mx-3" 
-                        [routerLink]="['/exams']" [routerLinkActive]="'bg-dark text-light'"
-                        [routerLinkActiveOptions]="{exact:true}">Exams</a>
-                    </li>
                 }
-                    
-                  
+                 
                     <li class="nav-item" *ngIf="userRole==='Teacher'">
                         <a class="nav-link text-secondary fw-semibold mx-3" 
-                        [routerLink]="['/exams',0,'upsert']" [routerLinkActive]="'bg-dark text-light'"
-                        [routerLinkActiveOptions]="{exact:true}">Add Exam</a>
+                        [routerLink]="['/teacher-dashboard']" [routerLinkActive]="'bg-dark text-light'"
+                        [routerLinkActiveOptions]="{exact:true}">Teacher Dashboard</a>
                     </li>
-            
-                   
                     <li class="nav-item" *ngIf="userRole === 'Student'">
                         <a class="nav-link text-secondary fw-semibold mx-3"
                          [routerLink]="['/AvailableExams']" [routerLinkActive]="'bg-dark text-light'" [routerLinkActiveOptions]="{exact:true}">Student Dashboard</a>
