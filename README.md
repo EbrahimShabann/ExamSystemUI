@@ -46,6 +46,3 @@ git clone https://github.com/EbrahimShabann/ExamSystemUI.git
 git clone https://github.com/EbrahimShabann/Exam-System-API.git
 cd ExamSystemUI
 
-###Teacher Credentials for testing
-Email:- Teacher2530@gmail.com
-Password:-  Teacher2530@
