@@ -6,7 +6,7 @@ import { Auth } from './auth';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-  private apiUrl = 'https://localhost:7233/api/Auth'//'https://exampro.runasp.net/api/Auth';
+  private apiUrl = 'https://exampro.runasp.net/api/Auth';
   constructor(private http: HttpClient, private auth: Auth) {}
 
   getCurrentUser(): Observable<IUser & { role?: string }> {
