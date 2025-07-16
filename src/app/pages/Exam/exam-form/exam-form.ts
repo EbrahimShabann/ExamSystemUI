@@ -27,7 +27,7 @@ export class ExamForm implements OnInit {
   ExamForm = new FormGroup({
     title: new FormControl('', [Validators.required, Validators.minLength(2)]),
     description: new FormControl('', [Validators.required]),
-    duration: new FormControl('', [Validators.required, Validators.min(15)]),
+    duration: new FormControl('', [Validators.required, Validators.min(1)]),
     questions: new FormArray([]),
   });
 
@@ -68,8 +68,13 @@ export class ExamForm implements OnInit {
                   duration: this.Exam.duration,
                 });
                  this.getQuestions.clear();
-
+                  console.log(this.Exam.questions);
                 this.Exam.questions.forEach((question: any) => {
+                  if(question.questionType==1){
+                    question.questionType='TF';
+                  }else{
+                    question.questionType='MCQ';
+                  }
                   const questionGroup = new FormGroup(
                     {
                       QuestionText: new FormControl(question.questionText, Validators.required),
@@ -218,6 +223,10 @@ onQuestionTypeChange(quesIndex: number, event: any) {
           }));
         } else if (q.QuestionType === 'TF') {
           // Find which choice is correct (True/False)
+            base.choices = q.choices.map((c: any) => ({
+            choiceText: c.ChoiceText,
+            isCorrect: c.IsCorrect
+          }));
           const correct = q.choices.find((c: any) => c.IsCorrect);
           base.tfCorrectAnswer = correct ? correct.ChoiceText === 'True' : false;
         }

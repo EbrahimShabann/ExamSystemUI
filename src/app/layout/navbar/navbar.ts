@@ -54,8 +54,10 @@ export class Navbar implements OnInit{
   logout(){
     this.auth.logout();
     this.refreshUserName();
-    this.cdr.detectChanges();
+     this.cdr.detectChanges();
     this.router.navigate(['/home']);
+       
+
     
   }
 
