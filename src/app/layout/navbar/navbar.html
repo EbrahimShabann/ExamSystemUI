@@ -1,21 +1,4 @@
-<div class="bg-dark text-white py-2 fs-6">
-        <div class="container">
-            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
-                <div class="mb-2 mb-md-0">
-                    <a href="mailto:ibrahimshaban@gmil.com" class="text-white text-decoration-none me-3"><i class="bi bi-envelope me-1"></i> Send an Email</a>
-                    <a href="tel:010-020-0340" class="text-white text-decoration-none"><i class="bi bi-telephone me-1"></i> 015-5517-8340</a>
-                </div>
-                <div >
-                    <a href="#" class="text-light text-decoration-none me-3"><i class="bi bi-facebook"></i></a>
-                    <a href="#" class="text-light text-decoration-none me-3"><i class="bi bi-instagram"></i></a>
-                    <a href="#" class="text-light text-decoration-none me-3"><i class="bi bi-twitter-x"></i></a>
-                    <a href="#" class="text-light text-decoration-none"><i class="bi bi-linkedin"></i></a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <nav class="navbar navbar-expand-lg bg-white py-3 shadow-sm">
+<nav class="navbar navbar-expand-lg bg-white py-3 shadow-sm">
         <div class="container">
             <a class="navbar-brand text-success fs-1 fw-bold" href="#">Exam Pro System</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,6 +21,11 @@
                     <li class="nav-item" *ngIf="userRole === 'Student'">
                         <a class="nav-link text-secondary fw-semibold mx-3"
                          [routerLink]="['/AvailableExams']" [routerLinkActive]="'bg-dark text-light'" [routerLinkActiveOptions]="{exact:true}">Student Dashboard</a>
+                    </li>
+
+                    <li class="nav-item" *ngIf="userRole === 'Teacher'||userRole === 'Student'">
+                        <a class="nav-link text-secondary fw-semibold mx-3"
+                         [routerLink]="['/result']" [routerLinkActive]="'bg-dark text-light'" [routerLinkActiveOptions]="{exact:true}">Results</a>
                     </li>
                 </ul>
                 <div class="d-flex align-items-center">

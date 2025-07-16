@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { ExamService } from '../../services/exam-service';
+import { UserService } from '../../services/user-service';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -25,11 +26,16 @@ export class TakeExamComponent implements OnInit,OnDestroy {
   submitted = false;
   showResultButton = false;
   resultDetails: any = null; // Holds the result with correct answers after submission
+  userRole: string | null = null;
+  // Pagination
+  currentPage = 1;
+  pageSize = 5;
 
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private examService: ExamService,
+    private userService: UserService,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {
@@ -62,7 +68,6 @@ export class TakeExamComponent implements OnInit,OnDestroy {
             text: c.choiceText
           })) || []
         }));
-        console.log('Mapped questions:', this.questions);
         this.initForm();
         this.loading = false;
         this.cdr.detectChanges();
@@ -73,6 +78,7 @@ export class TakeExamComponent implements OnInit,OnDestroy {
 
   initForm() {
     const answersArray = this.form.get('answers') as FormArray;
+    answersArray.clear();
     this.questions.forEach(q => {
       if (q.type === 'MCQ' || q.type === 'TF') {
         answersArray.push(this.fb.group({ questionId: q.id, choiceId: [null, Validators.required] }));
