@@ -127,6 +127,30 @@ submitExam(forceSubmit: boolean = false) {
   }
 
 
+  get pagedAnswersArray(): number[] {
+  const start = (this.currentPage - 1) * this.pageSize;
+  return Array.from({ length: Math.min(this.pageSize, this.questions.length - start) }, (_, i) => start + i);
+}
+
+
+get totalPages(): number {
+  return Math.ceil(this.questions.length / this.pageSize);
+}
+
+
+nextPage() {
+  if (this.currentPage < this.totalPages) {
+    this.currentPage++;
+  }
+}
+
+prevPage() {
+  if (this.currentPage > 1) {
+    this.currentPage--;
+  }
+}
+
+
   startTimer(){
     this.endTime=new Date();
     this.endTime.setMinutes(this.endTime.getMinutes()+this.examDuration);
