@@ -2,6 +2,12 @@
   <div *ngIf="loading" class="loading">Loading exam...</div>
   <!-- Exam Form -->
   <form *ngIf="!loading && !submitted" [formGroup]="form" (ngSubmit)="submitExam()" class="exam-form">
+    <div *ngIf="!loading && !submitted" class="exam-timer">
+      <div class="timer-display" [class.warning]="isTimeWarning()" [class.critical]="isTimeCritical()">
+        Time Remaining: {{ remainingTime }}
+      </div>
+    </div>
+    
     <div formArrayName="answers">
       <div *ngFor="let idx of pagedAnswersArray; let j = index" [formGroupName]="idx" class="question-block">
         <div class="question-title"><b>Q{{idx+1}}: {{ questions[idx].text }}</b></div>

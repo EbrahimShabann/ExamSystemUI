@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { ExamService } from '../../services/exam-service';
@@ -13,8 +13,12 @@ import { ReactiveFormsModule } from '@angular/forms';
   templateUrl: './take-exam.component.html',
   styleUrls: ['./take-exam.component.css']
 })
-export class TakeExamComponent implements OnInit {
+export class TakeExamComponent implements OnInit,OnDestroy {
   examId: string = '';
+  examDuration:number=0;
+  remainingTime:string ='';
+  private Timer:any;
+  private endTime:Date|null=null;
   questions: any[] = [];
   form: FormGroup;
   loading = true;
@@ -39,23 +43,18 @@ export class TakeExamComponent implements OnInit {
       answers: this.fb.array([])
     });
   }
+  ngOnDestroy(): void {
+    if(this.Timer){
+      clearInterval(this.Timer);
+    }
+  }
 
   ngOnInit() {
     this.examId = this.route.snapshot.paramMap.get('id') || '';
-    // Get user role
-    this.userService.getCurrentUser().subscribe({
-      next: (user) => {
-        this.userRole = user.role || null;
-        this.loadQuestions();
-      },
-      error: () => {
-        this.userRole = null;
-        this.loadQuestions();
-      }
-    });
-  }
-
-  loadQuestions() {
+    this.examService.GetExamById(this.examId).subscribe(details=>{
+      this.examDuration=details.duration||60;
+      this.startTimer();
+    })
     this.examService.getExamQuestions(this.examId).subscribe({
       next: (questions) => {
         // Map backend fields to frontend expected fields
@@ -88,58 +87,118 @@ export class TakeExamComponent implements OnInit {
       }
     });
   }
-
-  // Pagination helpers
-  get pagedQuestions() {
-    const start = (this.currentPage - 1) * this.pageSize;
-    return this.questions.slice(start, start + this.pageSize);
-  }
-  get pagedAnswersArray() {
-    const answersArray = this.form.get('answers') as FormArray;
-    const start = (this.currentPage - 1) * this.pageSize;
-    return Array.from({length: Math.min(this.pageSize, answersArray.length - start)}, (_, i) => start + i);
-  }
-  get totalPages() {
-    return Math.ceil(this.questions.length / this.pageSize);
-  }
-  nextPage() {
-    if (this.currentPage < this.totalPages) {
-      this.currentPage++;
-    }
-  }
-  prevPage() {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-    }
+submitExam(forceSubmit: boolean = false) {
+  if (this.Timer) {
+    clearInterval(this.Timer);
   }
 
-  submitExam() {
+  // Skip validation and confirmation for forced submission (when time ends)
+  if (!forceSubmit) {
     if (this.form.invalid) return;
-    if (!confirm('Are you sure you want to submit your answers?')) return;
-    this.submitting = true;
-    
-    const payload = { answers: this.form.value.answers };
-    console.log('Form payload:', JSON.stringify(payload, null, 2));
-    console.log('Questions:', this.questions);
-    this.examService.submitExam(this.examId, payload).subscribe({
-      next: (result) => {
-        alert('Exam submitted successfully!');
-        this.submitted = true;
-        this.showResultButton = true;
-        this.resultDetails = result; // Expecting result to contain correct answers and user answers
-        this.submitting = false;
-        this.router.navigate(['/AvailableExams'])
-        this.cdr.detectChanges();
-      },
-      error: () => {
-        this.submitting = false;
-        alert('Submission failed. Try again.');
-        this.cdr.detectChanges();
-      }
-    });
+    if (!this.submitted && !confirm('Are you sure you want to submit your answers?')) return;
   }
+
+  this.submitting = true;
+  
+  const payload = { answers: this.form.value.answers };
+  console.log('Form payload:', JSON.stringify(payload, null, 2));
+  console.log('Questions:', this.questions);
+  
+  this.examService.submitExam(this.examId, payload).subscribe({
+    next: (result) => {
+      alert('Exam submitted successfully!');
+      this.submitted = true;
+      this.showResultButton = true;
+      this.resultDetails = result;
+      this.submitting = false;
+      this.router.navigate(['/AvailableExams']);
+      this.cdr.detectChanges();
+    },
+    error: () => {
+      this.submitting = false;
+      alert('Submission failed. Try again.');
+      this.cdr.detectChanges();
+    }
+  });
+}
 
   goToDashboard() {
     this.router.navigate(['/']);
   }
+
+
+  startTimer(){
+    this.endTime=new Date();
+    this.endTime.setMinutes(this.endTime.getMinutes()+this.examDuration);
+    this.Timer= setInterval(() => {
+     this.updateRemainingTime();
+    }, 1000);
+  }
+
+updateRemainingTime(){
+  if(!this.endTime) return;
+
+  const now=new Date();
+  const diff= this.endTime.getTime()-now.getTime();
+
+  if(diff<=0){
+    clearInterval(this.Timer);
+    this.remainingTime='00:00:00';
+    if(!this.submitted){
+      this.forceFormCompletion();
+      this.submitExam(true);
+    }
+    return;
+  }
+
+  const hours= Math.floor(diff/(1000*60*60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    this.remainingTime = 
+      `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    
+    this.cdr.detectChanges();
+}
+
+
+forceFormCompletion() {
+  const answersArray = this.form.get('answers') as FormArray;
+  
+  answersArray.controls.forEach((answerGroup, index) => {
+    const question = this.questions[index];
+    
+    // If it's a MCQ/TF question and no answer was selected
+    if ((question.type === 'MCQ' || question.type === 'TF') && !answerGroup.value.choiceId) {
+      // Select the first option if available
+      if (question.choices && question.choices.length > 0) {
+        answerGroup.patchValue({ choiceId: question.choices[0].id });
+      }
+    }
+   
+  });
+  
+  // Mark all controls as touched to ensure validation passes
+  answersArray.controls.forEach(control => {
+    control.markAsTouched();
+  });
+}
+
+isTimeWarning(): boolean {
+  if (!this.endTime || !this.remainingTime) return false;
+  const now = new Date();
+  const diff = this.endTime.getTime() - now.getTime();
+  return diff < (this.examDuration * 60 * 1000 * 0.3); // 30% of time remaining
+}
+
+isTimeCritical(): boolean {
+  if (!this.endTime || !this.remainingTime) return false;
+  const now = new Date();
+  const diff = this.endTime.getTime() - now.getTime();
+  return diff < (this.examDuration * 60 * 1000 * 0.1); // 10% of time remaining
+}
+
+
+
+
 }
