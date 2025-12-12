@@ -6,7 +6,8 @@ import { Auth } from './auth';
 
 @Injectable({ providedIn: 'root' })
 export class ResultsService {
-  private apiUrl = 'https://exampro.runasp.net/api/Result';
+  // private apiUrl = 'https://exampro.runasp.net/api/Result';
+  private apiUrl = 'https://localhost:7233/api/Result';
 
   constructor(private http: HttpClient,private auth: Auth) { }
 

@@ -7,9 +7,10 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class Auth {
-  private apiUrl = 'https://exampro.runasp.net/api/Auth'; 
+  // private apiUrl = 'https://exampro.runasp.net/api/Auth'; 
+  private apiUrl = 'https://localhost:7233/api/Auth';
  headers:any;
-
+ userEmail!:string;
   constructor(private http: HttpClient,private router:Router) {}
 
   getheaders(): HttpHeaders | undefined {
@@ -20,13 +21,19 @@ export class Auth {
     return undefined;
   }
 
-  
+
   
 
   register(credentials: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, credentials);
   }
+  validateOtp(otpCode:any, email:string):Observable<any>{
+        return this.http.post(`${this.apiUrl}/validate-otp`, {otpCode,email});
+  }
 
+  resendOtp(userEmail:string):Observable<any>{
+    return this.http.get(`${this.apiUrl}/resend-otp?userEmail=${userEmail}`);
+  }
  login(credentials: any): Observable<any> {
   return this.http.post(`${this.apiUrl}/login`, credentials)
   //get token from api and save it in cookie
@@ -42,11 +49,18 @@ export class Auth {
       })
     );
 }
+
+
 isLoggedIn():boolean{
+    let userRole= document.cookie.match(new RegExp('(^| )UserRole=([^;]+)'));
+    if(userRole)
+        localStorage.setItem('userRole',userRole[2]);
+ 
   return !! this.getheaders();
 }
 
 logout():void {
+  localStorage.clear();  
   document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
 }
 

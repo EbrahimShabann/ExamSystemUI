@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Auth } from '../../services/auth';
 import { CommonModule } from '@angular/common';
@@ -15,7 +15,7 @@ export class RegisterComponent {
   loading = false;
   message = '';
 
-  constructor(private fb: FormBuilder, private auth: Auth,private router:Router) {
+  constructor(private fb: FormBuilder, private auth: Auth,private router:Router, private cdr:ChangeDetectorRef) {
     this.registerForm = this.fb.group({
       email: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]]
@@ -26,18 +26,25 @@ export class RegisterComponent {
     if (this.registerForm.invalid) return;
     this.loading = true;
     this.message = '';
+    this.auth.userEmail=this.registerForm.get('email')?.value;
     this.auth.register(this.registerForm.value).subscribe({
-      next: () => {
-        this.message = 'Registration successful!';
-        alert('Registration successful!');
+      next: (res) => {
+        console.log(res);
+        this.message = res.message;
+        alert(res.message);
         this.loading = false;
-        this.registerForm.reset();
-        this.router.navigate(['/account/login']);
+        if(res.success){
+          this.registerForm.reset();
+          this.router.navigate(['/otpVerfication']);  
+        }
+       
+        
       },
       error: err => {
         this.message = err.error?.message || 'Registration failed!';
-         alert(err.message);
+         alert(this.message);
         this.loading = false;
+        this.cdr.detectChanges();
       }
     });
   }

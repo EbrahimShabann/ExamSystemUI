@@ -1,34 +1,71 @@
-<div class="auth-container shadow-lg rounded-lg p-5 bg-white">
-  <h2 class="text-center mb-4 text-gradient">Welcome Back</h2>
-  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="form-signin">
-    <div class="form-group mb-4">
-      <label class="form-label text-muted">Email Address</label>
-      <input formControlName="email" type="text" class="form-control form-control-lg" 
-             [ngClass]="{'is-invalid': loginForm.get('email')?.invalid && loginForm.get('email')?.touched}" />
-      <div class="invalid-feedback" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+<div class="auth-container shadow rounded-3 p-5 bg-white border-0">
+  <h2 class="text-center mb-4 text-primary fw-bold">Welcome Back</h2>
+  
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
+    <!-- Email Field -->
+    <div class="mb-4">
+      <label class="form-label text-secondary fw-medium">Email Address</label>
+      <input formControlName="email" type="email" class="form-control form-control-lg border-1" 
+             [class.is-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+             [class.is-valid]="loginForm.get('email')?.valid && loginForm.get('email')?.touched"
+             placeholder="Enter your email">
+      <div class="invalid-feedback d-block" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
         Please enter a valid email address
       </div>
     </div>
-    <div class="form-group mb-4">
-      <label class="form-label text-muted">Password</label>
-      <input formControlName="password" type="password" class="form-control form-control-lg" 
-             [ngClass]="{'is-invalid': loginForm.get('password')?.invalid && loginForm.get('password')?.touched}" />
-      <div class="invalid-feedback" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+
+    <!-- Password Field -->
+    <div class="mb-4">
+      <label class="form-label text-secondary fw-medium">Password</label>
+      <input formControlName="password" type="password" class="form-control form-control-lg border-1" 
+             [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+             [class.is-valid]="loginForm.get('password')?.valid && loginForm.get('password')?.touched"
+             placeholder="Enter your password">
+      <div class="invalid-feedback d-block" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
         Password is required
       </div>
     </div>
-    <button type="submit" class="btn btn-primary btn-lg btn-block mt-4 gradient-btn" 
+
+    <!-- Login Button -->
+    <button type="submit" class="btn btn-primary btn-lg w-100 py-2 mt-3 fw-semibold" 
             [disabled]="loading || loginForm.invalid">
-      <span *ngIf="!loading">Login</span>
-      <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
+      <span *ngIf="!loading" class="d-flex align-items-center justify-content-center">
+        <i class="fas fa-sign-in-alt me-2"></i>Login
+      </span>
+      <span *ngIf="loading" class="d-flex align-items-center justify-content-center">
+        <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+        Signing in...
+      </span>
     </button>
-    <div class="alert mt-4" 
-         [ngClass]="{'alert-success': message.includes('success'), 'alert-danger': message && !message.includes('success')}" 
-         *ngIf="message">
+
+    <!-- Message Alert -->
+    <div class="alert mt-4 mb-0" 
+         [class.alert-success]="message.includes('success')" 
+         [class.alert-danger]="message && !message.includes('success')" 
+         [class.d-none]="!message">
+      <i class="fas" [class.fa-check-circle]="message.includes('success')" [class.fa-exclamation-circle]="!message.includes('success')"></i>
       {{ message }}
     </div>
-    <div class="text-center mt-3">
-      <a href="#" class="text-muted">Forgot password?</a>
+
+    <!-- Forgot Password -->
+    <div class="text-center mt-4">
+      <a href="#" class="text-decoration-none text-muted">
+        <i class="fas fa-key me-1"></i>Forgot password?
+      </a>
     </div>
+
+    <!-- Divider -->
+    <div class="position-relative text-center my-4">
+      <hr class="border-secondary">
+      <span class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted">or</span>
+    </div>
+
+    <!-- Google Login Button -->
+    <a type="button" href="https://localhost:7233/api/Auth/LoginWithGoogle" class="btn btn-outline-primary btn-lg w-100 py-2">
+      <span class="d-flex align-items-center justify-content-center">
+        <i class="fab fa-google text-danger me-2"></i>
+        Sign in with Google
+      </span>
+    </a>
   </form>
 </div>

@@ -9,7 +9,8 @@ import { Auth } from './auth';
 export class ExamService {
   constructor(private http: HttpClient, private auth: Auth) {}
 
-  private apiUrl = 'https://exampro.runasp.net/api/Exam';
+  // private apiUrl = 'https://exampro.runasp.net/api/Exam';
+    private apiUrl = 'https://localhost:7233/api/Exam';
 
   private examsChangedSource = new BehaviorSubject<void>(undefined);
   examsChanged$ = this.examsChangedSource.asObservable();

@@ -13,6 +13,7 @@ import { TakeExamComponent } from './pages/Exam/take-exam.component';
 import { roleGuardGuard } from './services/role-guard-guard';
 import { Home } from './pages/home/home';
 import { Results } from './pages/results/results';
+import { OtpVerfication } from './components/otp-verfication/otp-verfication';
 
 export const routes: Routes = [
      { path: '', component: Home },
@@ -29,5 +30,6 @@ export const routes: Routes = [
             { path: 'register', component: RegisterComponent }
         ] },
     { path: 'result', component: Results},
+    { path: 'otpVerfication', component: OtpVerfication },
     { path: '**', component: NotFound },
 ];
